@@ -86,6 +86,8 @@ async def handle_text(message: types.Message):
         await sneklarr(message)
     elif message.text in button_values_lester:
         await lestrlarr(message)
+    elif message.text in burger_dict:
+        await burgerlarr(message)
     elif message.text in ichimliklar:
         await ichimlik_zakaz(message)
     elif message.text == "📥 Savat":
@@ -506,22 +508,22 @@ ichimliklar = {
     "Berry Moxito": 35000
 }
 
-tovuq_dict = {
-    'Chiken korn': 15000,
-    "Qanot, 3 dona": 18000,
-    'Achchiq qanot, 3 dona': 20000,
-    "Strips, 3 dona": 22000,
-    "Achchiq strips, 3 dona": 25000,
-    "Chizi chiken korn": 27000,
-    "Qanot, 7 dona": 30000,
-    "Achchiq qanot, 7 dona": 32000,
-    "Strips, 7 dona": 35000,
-    "Achchiq strips, 7 dona": 37000,
-    "Qanot, 17 dona": 40000,
-    'Achchiq qanot, 17 dona': 42000,
-    'Strips, 17 dona': 45000,
-    "Achchiq strips, 17 dona": 50000
-}
+# tovuq_dict = {
+#     'Chiken korn': 15000,
+#     "Qanot, 3 dona": 18000,
+#     'Achchiq qanot, 3 dona': 20000,
+#     "Strips, 3 dona": 22000,
+#     "Achchiq strips, 3 dona": 25000,
+#     "Chizi chiken korn": 27000,
+#     "Qanot, 7 dona": 30000,
+#     "Achchiq qanot, 7 dona": 32000,
+#     "Strips, 7 dona": 35000,
+#     "Achchiq strips, 7 dona": 37000,
+#     "Qanot, 17 dona": 40000,
+#     'Achchiq qanot, 17 dona': 42000,
+#     'Strips, 17 dona': 45000,
+#     "Achchiq strips, 17 dona": 50000
+# }
 
 button_values_snek = {
     'Tovuq nagetsi, 3 dona': 15000,
@@ -1160,218 +1162,186 @@ async def savat(message: types.Message):
             parse_mode="Markdown",
             reply_markup=keyboard
         )
-
-
     else:
         await message.answer("Hi")
 
 
+# Mahsulotlar haqidagi ma'lumotlarni bitta lug'atda jamlaymiz:
+tovuq_dict = {
+    'Chiken korn': {
+        'narx': 15000,
+        'rasm': "images/chickencorn.jpg"
+    },
+    "Qanot, 3 dona": {
+        'narx': 18000,
+        'rasm': "images/qanot-3dona.jpg"
+    },
+    'Achchiq qanot, 3 dona': {
+        'narx': 20000,
+        'rasm': "images/achchiqqanot3dona.jpg"
+    },
+    "Strips, 3 dona": {
+        'narx': 22000,
+        'rasm': "images/strips3dona.jpg"
+    },
+    "Achchiq strips, 3 dona": {
+        'narx': 25000,
+        'rasm': "images/achchiqstrips.jpg"
+    },
+    "Chizi chiken korn": {
+        'narx': 27000,
+        'rasm': "images/chizchicken.jpg"
+    },
+    "Qanot, 7 dona": {
+        'narx': 30000,
+        'rasm': "images/qanot7.jpg"
+    },
+    "Achchiq qanot, 7 dona": {
+        'narx': 32000,
+        'rasm': "images/achchiqqanot7.jpg"
+    },
+    "Strips, 7 dona": {
+        'narx': 35000,
+        'rasm': "images/strips7.jpg"
+    },
+    "Achchiq strips, 7 dona": {
+        'narx': 37000,
+        'rasm': "images/achchiqstrips7.jpg"
+    },
+    "Qanot, 17 dona": {
+        'narx': 40000,
+        'rasm': "images/qanot17.jpg"
+    },
+    "Achchiq qanot, 17 dona": {
+        'narx': 42000,
+        'rasm': "images/achchiqqanot17.jpg"
+    },
+    "Strips, 17 dona": {
+        'narx': 45000,
+        'rasm': "images/strips17.jpg"
+    },
+    "Achchiq strips, 17 dona": {
+        'narx': 50000,
+        'rasm': "images/achchiqstrips17.jpg"
+    }
+}
 
 
 async def tovuqlarr(message: types.Message):
     user_id = message.from_user.id
     user_data[user_id]["holat"] = "tovuqlarr"
     item = message.text
-    price = 22000
-    name = tovuq_dict[item]
-    buttons = [
-        [types.KeyboardButton(text="↖️ Ortga"), types.KeyboardButton(text="📥Savatga qo'shish✅")],
-    ]
-    keyboards = types.ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
-    button = [
-        [types.InlineKeyboardButton(text="-", callback_data=f"minus_{item}"),
-         types.InlineKeyboardButton(text="1", callback_data=f"miqdor_{item}"),
-         types.InlineKeyboardButton(text="+", callback_data=f"plus_{item}"),],
-        [types.InlineKeyboardButton(text="📥Savatga qo'shish✅", callback_data=f"add_{item}"), ],
-    ]
-    keyboard = types.InlineKeyboardMarkup(inline_keyboard=button, resize_keyboard=True)
 
-    file_path_korn = "images/chickencorn.jpg"
-    print("rasm yuborildi")
-    caption_text_korn = (
+    # Agar mahsulot lug'atda bo'lsa
+    if item in tovuq_dict:
+        info = tovuq_dict[item]
+        narx = info['narx']
+        rasm_manzi = info['rasm']
 
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_qanot3 = "images/qanot-3dona.jpg"
-    caption_text_qanot3 = (
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_achqanot3 = "images/achchiqqanot3dona.jpg"
-    caption_text_achqanot3 = (
+        # Klaviatura tugmalari
+        asosiy_tugmalar = [
+            [types.KeyboardButton(text="↖️ Ortga"), types.KeyboardButton(text="📥Savatga qo'shish✅")],
+        ]
+        reply_keyboard = types.ReplyKeyboardMarkup(keyboard=asosiy_tugmalar, resize_keyboard=True)
 
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_strip3 = "images/strips3dona.jpg"
-    caption_text_strip3 = (
+        inline_tugmalar = [
+            [types.InlineKeyboardButton(text="-", callback_data=f"minus_{item}"),
+             types.InlineKeyboardButton(text="1", callback_data=f"miqdor_{item}"),
+             types.InlineKeyboardButton(text="+", callback_data=f"plus_{item}")],
+            [types.InlineKeyboardButton(text="📥Savatga qo'shish✅", callback_data=f"add_{item}")],
+        ]
+        inline_keyboard = types.InlineKeyboardMarkup(inline_keyboard=inline_tugmalar, resize_keyboard=True)
 
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_achstrip = "images/achchiqstrips.jpg"
-    caption_text_achstrip = (
+        # Caption yaratamiz (oddiy qilib)
+        caption_text = f"Nomi: {item}\nNarxi: {narx} so'm"
 
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_chizchicken = "images/chizchicken.jpg"
-    caption_text_chizchicken = (
-
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_qanot7 = "images/qanot7.jpg"
-    caption_text_qanot7 = (
-
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_achqanot7 = "images/achchiqqanot7.jpg"
-    caption_text_achqanot7 = (
-
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_strip7 = "images/strips7.jpg"
-    caption_text_strip7 = (
-
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_achstrip7 = "images/achchiqstrips7.jpg"
-    caption_text_achstrip7 = (
-
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_qanot17 = "images/qanot17.jpg"
-    caption_text_qanot17 = (
-
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_achqanot17 = "images/achchiqqanot17.jpg"
-    caption_text_achqanot17 = (
-
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_strip17 = "images/strips17.jpg"
-    caption_text_strip17 = (
-
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-    file_path_achstrip17 = "images/achchiqstrips17.jpg"
-    caption_text_achstrip17 = (
-
-        f"Nomi: {name}"
-        f"Narxi: {price}so'm"
-    )
-
-    await message.answer("Miqdorni belgilang",reply_markup=keyboards)
-    if message.text == 'Chiken korn':
+        await message.answer("Miqdorni belgilang", reply_markup=reply_keyboard)
         await message.reply_photo(
-            caption=caption_text_korn,
-            photo=types.FSInputFile(path=file_path_korn),
+            caption=caption_text,
+            photo=types.FSInputFile(path=rasm_manzi),
             parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Qanot 3 dona':
-        await message.reply_photo(
-            caption=caption_text_qanot3,
-            photo=types.FSInputFile(path=file_path_qanot3),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Achchiq qanot 3 dona':
-        await message.reply_photo(
-            caption=caption_text_achqanot3,
-            photo=types.FSInputFile(path=file_path_achqanot3),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Strips 3 dona':
-        await message.reply_photo(
-            caption=caption_text_strip3,
-            photo=types.FSInputFile(path=file_path_strip3),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Achchiq strips 3 dona':
-        await message.reply_photo(
-            caption=caption_text_achstrip,
-            photo=types.FSInputFile(path=file_path_achstrip),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Chizi chiken korn':
-        await message.reply_photo(
-            caption=caption_text_chizchicken,
-            photo=types.FSInputFile(path=file_path_chizchicken),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Qanot 7 dona':
-        await message.reply_photo(
-            caption=caption_text_qanot7,
-            photo=types.FSInputFile(path=file_path_qanot7),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Achchiq qanot 7 dona':
-        await message.reply_photo(
-            caption=caption_text_achqanot7,
-            photo=types.FSInputFile(path=file_path_achqanot7),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Strips 7 dona':
-        await message.reply_photo(
-            caption=caption_text_strip7,
-            photo=types.FSInputFile(path=file_path_strip7),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Achchiq strips 7 dona':
-        await message.reply_photo(
-            caption=caption_text_achstrip7,
-            photo=types.FSInputFile(path=file_path_achstrip7),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Qanot 17 dona':
-        await message.reply_photo(
-            caption=caption_text_qanot17,
-            photo=types.FSInputFile(path=file_path_qanot17),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Achchiq qanot 17 dona':
-        await message.reply_photo(
-            caption=caption_text_achqanot17,
-            photo=types.FSInputFile(path=file_path_achqanot17),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Strips 17 dona':
-        await message.reply_photo(
-            caption=caption_text_strip17,
-            photo=types.FSInputFile(path=file_path_strip17),
-            parse_mode="Markdown",
-            reply_markup=keyboard
-        )
-    elif message.text == 'Achchiq strips 17 dona':
-        await message.reply_photo(
-            caption=caption_text_achstrip17,
-            photo=types.FSInputFile(path=file_path_achstrip17),
-            parse_mode="Markdown",
-            reply_markup=keyboard
+            reply_markup=inline_keyboard
         )
     else:
-        await message.answer("Hi")
+        await message.answer("Bunday mahsulot topilmadi!")
+
+
+burger_dict = {
+    'Klassik': {
+        'narx': 15000,
+        'rasm': "images/classic.jpg"
+    },
+    "1+1 Barbekyu burger": {
+        'narx': 18000,
+        'rasm': "images/1+1barbekyu.jpg"
+    },
+    '1+1 Sezar burger': {
+        'narx': 20000,
+        'rasm': "images/1+1Sezarburger.jpg"
+    },
+    "Singer": {
+        'narx': 22000,
+        'rasm': "images/singer.jpg"
+    },
+    "Chiken chiz": {
+        'narx': 25000,
+        'rasm': "images/chickenchiz.jpg"
+    },
+    "Xalapenyo burger": {
+        'narx': 27000,
+        'rasm': "images/xalapenyo.jpg"
+    },
+    "Biger": {
+        'narx': 30000,
+        'rasm': "images/bigger.jpg"
+    },
+    "Dabl chiken chiz": {
+        'narx': 32000,
+        'rasm': "images/doublechickenchiz.jpg"
+    }
+}
+
+
+async def burgerlarr(message: types.Message):
+    user_id = message.from_user.id
+    user_data[user_id]["holat"] = "burgerlar"
+    item = message.text
+
+    # Agar mahsulot lug'atda bo'lsa
+    if item in burger_dict:
+        info = burger_dict[item]
+        narx = info['narx']
+        rasm_manzi = info['rasm']
+
+        # Klaviatura tugmalari
+        asosiy_tugmalar = [
+            [types.KeyboardButton(text="↖️ Ortga"), types.KeyboardButton(text="📥Savatga qo'shish✅")],
+        ]
+        reply_keyboard = types.ReplyKeyboardMarkup(keyboard=asosiy_tugmalar, resize_keyboard=True)
+
+        inline_tugmalar = [
+            [types.InlineKeyboardButton(text="-", callback_data=f"minus_{item}"),
+             types.InlineKeyboardButton(text="1", callback_data=f"miqdor_{item}"),
+             types.InlineKeyboardButton(text="+", callback_data=f"plus_{item}")],
+            [types.InlineKeyboardButton(text="📥Savatga qo'shish✅", callback_data=f"add_{item}")],
+        ]
+        inline_keyboard = types.InlineKeyboardMarkup(inline_keyboard=inline_tugmalar, resize_keyboard=True)
+
+        # Caption yaratamiz (oddiy qilib)
+        caption_text = f"Nomi: {item}\nNarxi: {narx} so'm"
+
+        await message.answer("Miqdorni belgilang", reply_markup=reply_keyboard)
+        await message.reply_photo(
+            caption=caption_text,
+            photo=types.FSInputFile(path=rasm_manzi),
+            parse_mode="Markdown",
+            reply_markup=inline_keyboard
+        )
+    else:
+        await message.answer("Bunday mahsulot topilmadi!")
+
+
+
 
 
 async def sneklarr(message: types.Message):
@@ -1681,6 +1651,7 @@ count = 1
 @dp.callback_query(lambda c: c.data.startswith(('plus', 'minus', 'add')))
 async def checkcallback(callback: types.CallbackQuery):
     user_id = callback.from_user.id
+    narx = callback.data
     price = 22000
     name = "Fri kartoshkasiCoca-cola 0.5\n"
     command, item = callback.data.split('_')
