@@ -76,8 +76,31 @@ async def handle_text(message: types.Message):
         await asosiymenu(message)
     elif message.text == "↪️ Ortga":
         await asosiymenu(message)
-    elif message.text in main_menu or message.text == "↖️ Ortga":
+    elif message.text in main_menu:
         await menu_tekshiruv(message)
+    elif message.text == "↖️ Ortga":
+        if user_data[user_id]['tanlov'] == 'Setlar':
+            await taomlar(message)
+        elif user_data[user_id]['tanlov'] == 'Ichimliklar':
+            await ichimlik(message)
+        elif user_data[user_id]['tanlov'] == 'Tovuq':
+            await tovuqlar(message)
+        elif user_data[user_id]['tanlov'] == 'Sneklar':
+            await snek(message)
+        elif user_data[user_id]['tanlov'] == 'Lesterlar':
+            await lester(message)
+        elif user_data[user_id]['tanlov'] == 'Burgerlar':
+            await burger(message)
+        elif user_data[user_id]['tanlov'] == 'Longerlar/Hot-dog':
+            await longer_hotdog(message)
+        elif user_data[user_id]['tanlov'] == 'Salatlar':
+            await salat(message)
+        elif user_data[user_id]['tanlov'] == 'Ponchiklar':
+            await ponchik(message)
+        elif user_data[user_id]['tanlov'] == 'Bolajonlarga':
+            await bolalarga(message)
+        elif user_data[user_id]['tanlov'] == 'Souslar':
+            await sous(message)
     elif message.text in taom:
         await savat(message)
     elif message.text in tovuq_dict:
@@ -615,28 +638,39 @@ async def menu_tekshiruv(message: types.Message):
     choice = message.text
     if choice == '🍱 Setlar':
         await taomlar(message)
+        user_data[user_id]['tanlov'] = 'Setlar'
     elif choice == '🥤 Ichimliklar':
         await ichimlik(message)
-    elif choice == '↖️ Ortga':
-        await asosiymenu(message)
+        user_data[user_id]['tanlov'] = 'Ichimliklar'
+    # elif choice == '↖️ Ortga':
+    #     await asosiymenu(message)
     elif choice == '🍗 Tovuq':
         await tovuqlar(message)
+        user_data[user_id]['tanlov'] = 'Tovuq'
     elif choice == '🍟 Sneklar':
         await snek(message)
+        user_data[user_id]['tanlov'] = 'Sneklar'
     elif choice == '🌯 Lesterlar':
         await lester(message)
+        user_data[user_id]['tanlov'] = 'Lesterlar'
     elif choice == "🍔 Burgerlar":
         await burger(message)
+        user_data[user_id]['tanlov'] = 'Burgerlar'
     elif choice == "🌭 Longerlar/Hot-dog":
         await longer_hotdog(message)
+        user_data[user_id]['tanlov'] = 'Longerlar/Hot-dog'
     elif choice == "🥗 Salatlar":
         await salat(message)
+        user_data[user_id]['tanlov'] = 'Salatlar'
     elif choice == "🍩 Ponchiklar":
         await ponchik(message)
+        user_data[user_id]['tanlov'] = 'Ponchiklar'
     elif choice == "👶 Bolajonlarga":
         await bolalarga(message)
+        user_data[user_id]['tanlov'] = 'Bolajonlarga'
     elif choice == "🍅 Souslar":
         await sous(message)
+        user_data[user_id]['tanlov'] = 'Souslar'
 
 
 
@@ -660,6 +694,7 @@ async def ichimlik(message: types.Message):
     ]
     keyboard = types.ReplyKeyboardMarkup(keyboard=button, resize_keyboard=True)
     await message.answer("Nimadan boshlaymiz?", reply_markup=keyboard)
+    print(user_data)
 
 
 async def ichimlik_zakaz(message: types.Message):
@@ -862,6 +897,7 @@ async def taomlar(message: types.Message):
     ]
     keyboard = types.ReplyKeyboardMarkup(keyboard=button, resize_keyboard=True)
     await message.answer("Nimadan boshlaymiz?", reply_markup=keyboard)
+    print(user_data)
 
 
 
@@ -1652,7 +1688,7 @@ count = 1
 async def checkcallback(callback: types.CallbackQuery):
     user_id = callback.from_user.id
     narx = callback.data
-    price = 22000
+    price = 10
     name = "Fri kartoshkasiCoca-cola 0.5\n"
     command, item = callback.data.split('_')
     global count
@@ -1713,11 +1749,9 @@ async def show_cart(message: types.Message):
     total_price = 0
     cart_text = "🛒 Sizning savatingiz:\n\n"
     for idx, (item_name, item_count) in enumerate(cart_items.items(), start=1):
-        item_price = 22000  # This is the price for each item
+        item_price = 10  # This is the price for each item
         total_price += item_price * item_count  # Multiply price by the count
         cart_text += f"{idx}. {item_name} x{item_count} — {item_price * item_count} so'm\n"
-
-
     cart_text += f"\n💵 Jami: {total_price} so'm"
     button = [
         [types.KeyboardButton(text='↪️ Ortga'), types.KeyboardButton(text="Savatni to'ldirdim ✅")],
