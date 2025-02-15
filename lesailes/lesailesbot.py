@@ -434,9 +434,16 @@ async def check_location(message: types.Message):
         latitude = message.location.latitude
         longitude = message.location.longitude
 
-        # Koordinatalarni manzil nomiga o‘girish
-        location_info = geolocator.reverse((latitude, longitude), exactly_one=True)
-        address = location_info.address if location_info else "Manzil topilmadi"
+        # # Koordinatalarni manzil nomiga o‘girish
+        # location_info = geolocator.reverse((latitude, longitude), exactly_one=True)
+        # address = location_info.address if location_info else "Manzil topilmadi"
+
+        address_info = geolocator.reverse((latitude, longitude), exactly_one=True)
+
+        if address_info:
+            address = address_info.address
+        else:
+            address = "Manzil topilmadi"
 
         location = {
             "latitude": latitude,
