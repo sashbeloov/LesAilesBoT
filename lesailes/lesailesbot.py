@@ -56,13 +56,13 @@ async def handle_text(message: types.Message):
     elif "ismlarr" in user_data[user_id]:
         await checkname(message)
         await sozlamalar(message)
-    elif message.contact is not None or "+998" in message.text:
-        await ask_phone(message)
+    # elif message.contact is not None or "+998" in message.text:
+    #     await ask_phone(message)
     elif "ver_code" in user_data[user_id]:
         await check_code(message)
     elif message.text == "📱 Raqamni o'zgartirish":
         await history(message)
-    elif message.text == "🏃 Olib ketish":
+    elif message.text == "🏃 Olib ketish" or message.text == "▶️ Ortga":
         await olibketish(message)
     elif message.text == "🌐 Bu yerda buyurtma berish":
         await website(message)
@@ -119,6 +119,13 @@ async def handle_text(message: types.Message):
         await tolovgqismi(message)
     elif message.text == "Iloji boricha tezroq✅":
         await onlinepayment(message)
+    elif message.text == "📍 Eng yaqin fillialni tanlang":
+        await engyaqinfilial(message)
+    elif "locationkeldi" in user_data[user_id]:
+        await check_location(message)
+
+
+
 
 
 
@@ -403,7 +410,52 @@ async def website(message: types.Message):
     )
 
 
+async def engyaqinfilial(message: types.Message):
+    user_id = message.from_user.id
+    user_data[user_id]["engyaqinfilial"] = "engyaqinfilial"
+    button = [
+        [types.KeyboardButton(text="Lokatsiyani jo'natish",request_location=True)],
+    ]
+    keyboard = types.ReplyKeyboardMarkup(keyboard=button,resize_keyboard=True)
+    await message.answer("Lokatsiyangizni jo'nating",reply_markup=keyboard)
+    print(user_data)
+    user_data[user_id]["locationkeldi"] = "locationkeldi"
 
+
+location = {}
+
+from geopy.geocoders import Nominatim
+
+async def check_location(message: types.Message):
+    user_id = message.from_user.id
+    geolocator = Nominatim(user_agent="geo_bot")
+
+    if message.location is not None:
+        latitude = message.location.latitude
+        longitude = message.location.longitude
+
+        # Koordinatalarni manzil nomiga o‘girish
+        location_info = geolocator.reverse((latitude, longitude), exactly_one=True)
+        address = location_info.address if location_info else "Manzil topilmadi"
+
+        location = {
+            "latitude": latitude,
+            "longitude": longitude,
+            "address": address
+        }
+    else:
+        location = message.text
+
+    user_data[user_id]["location"] = location
+    button = [
+        [types.KeyboardButton(text="▶️ Ortga"), types.KeyboardButton(text="✅ Tasdiqlash")]
+    ]
+    keyboard = types.ReplyKeyboardMarkup(keyboard=button, resize_keyboard=True)
+
+    await message.reply(f"Sizning manzilingiz:📍{address}\n\nJoylashuvni tasdiqlang yoki qayta yuboring",
+                        reply_markup=keyboard)
+    print(user_data)
+    print(location)
 
 
 async def filialnitanlash(message: types.Message):
